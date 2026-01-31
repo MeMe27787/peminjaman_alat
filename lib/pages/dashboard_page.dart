@@ -64,75 +64,77 @@ class DashboardPage extends StatelessWidget {
       ),
 
       // ================= BODY =================
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Beranda',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+      body: SingleChildScrollView( // <<< INI SATU-SATUNYA PERUBAHAN
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Beranda',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            Row(
-              children: [
-                _statCard(Icons.person, 'USER', '12'),
-                const SizedBox(width: 12),
-                _statCard(Icons.computer, 'ALAT', '29'),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                _statCard(Icons.receipt, 'TRANSAKSI', '75'),
-                const SizedBox(width: 12),
-                _statCard(Icons.category, 'KATEGORI', '14'),
-              ],
-            ),
-
-            const SizedBox(height: 20),
-
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: hijauMuda,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
                 children: [
-                  const Text(
-                    'Aktifitas terkini',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text('Ada 2 peminjaman baru hari ini'),
-                  const SizedBox(height: 12),
-                  Center(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      onPressed: () {},
-                      child: const Text('CEK LAPORAN'),
-                    ),
-                  ),
+                  _statCard(Icons.person, 'USER', '12'),
+                  const SizedBox(width: 12),
+                  _statCard(Icons.computer, 'ALAT', '29'),
                 ],
               ),
-            ),
-          ],
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  _statCard(Icons.receipt, 'TRANSAKSI', '75'),
+                  const SizedBox(width: 12),
+                  _statCard(Icons.category, 'KATEGORI', '14'),
+                ],
+              ),
+
+              const SizedBox(height: 20),
+
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: hijauMuda,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Aktifitas terkini',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text('Ada 2 peminjaman baru hari ini'),
+                    const SizedBox(height: 12),
+                    Center(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: () {},
+                        child: const Text('CEK LAPORAN'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/user_model.dart';
+import 'user_detail_page.dart';
 
 class UserManagementPage extends StatefulWidget {
   const UserManagementPage({super.key});
@@ -86,7 +87,6 @@ class _UserManagementPageState extends State<UserManagementPage> {
             onPressed: () {
               setState(() {
                 if (user == null) {
-                  // CREATE
                   users.add(
                     UserModel(
                       id: _idCounter++,
@@ -97,7 +97,6 @@ class _UserManagementPageState extends State<UserManagementPage> {
                     ),
                   );
                 } else {
-                  // UPDATE
                   user.nama = namaController.text;
                   user.kelas = kelasController.text;
                   user.peran = peran;
@@ -149,9 +148,7 @@ class _UserManagementPageState extends State<UserManagementPage> {
         title: const Text('Management User'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context); // Tombol back berfungsi
-          },
+          onPressed: () => Navigator.pop(context),
         ),
         actions: [
           IconButton(
@@ -197,7 +194,9 @@ class _UserManagementPageState extends State<UserManagementPage> {
                         Text(
                           user.nama,
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
                         Text(user.kelas),
                         const SizedBox(height: 6),
@@ -219,14 +218,13 @@ class _UserManagementPageState extends State<UserManagementPage> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                // // Panggil halaman profil
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (_) =>
-                                //         UserProfilePage(user: user),
-                                //   ),
-                                // );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        UserDetailPage(user: user),
+                                  ),
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
