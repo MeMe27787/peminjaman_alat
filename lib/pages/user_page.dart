@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:peminjaman/pages/alat_page.dart';
 import 'package:peminjaman/pages/kategori_page.dart';
 import 'package:peminjaman/pages/user_management_page.dart';
+import 'package:peminjaman/pages/dashboard_page.dart';
+import 'package:peminjaman/pages/transaksi_page.dart';
 
 class UserPage extends StatelessWidget {
   const UserPage({super.key});
@@ -72,7 +74,7 @@ class UserPage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => UserManagementPage(),
+                    builder: (context) => const UserManagementPage(),
                   ),
                 );
               },
@@ -115,12 +117,30 @@ class UserPage extends StatelessWidget {
         ),
       ),
 
-      // ================= BOTTOM NAV =================
+      // ================= BOTTOM NAV (INI YANG DIBENAHI) =================
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 1, // Admin
         backgroundColor: hijauMuda,
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.black54,
         type: BottomNavigationBarType.fixed,
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const DashboardPage()),
+            );
+          } else if (index == 1) {
+            // sedang di Admin
+          } else if (index == 2) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const TransaksiPage()),
+            );
+          } else if (index == 3) {
+            // nanti ke Riwayat
+          }
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/alat_model.dart';
+import 'package:peminjaman/pages/transaksi_page.dart';
 
 class AlatDetailPage extends StatefulWidget {
   final AlatModel alat;

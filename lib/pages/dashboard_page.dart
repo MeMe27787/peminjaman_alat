@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:peminjaman/pages/user_page.dart';
+import 'package:peminjaman/pages/transaksi_page.dart';
 
-class DashboardPage extends StatelessWidget {
+class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
 
+  @override
+  State<DashboardPage> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> {
   final Color hijauMuda = const Color(0xFF8BAE66);
   final Color hijauTua = const Color(0xFF628141);
+
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -49,14 +57,9 @@ class DashboardPage extends StatelessWidget {
                   ],
                 ),
                 const Spacer(),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.notifications),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.logout),
-                ),
+                Icon(Icons.notifications),
+                const SizedBox(width: 12),
+                Icon(Icons.logout),
               ],
             ),
           ),
@@ -64,7 +67,7 @@ class DashboardPage extends StatelessWidget {
       ),
 
       // ================= BODY =================
-      body: SingleChildScrollView( // <<< INI SATU-SATUNYA PERUBAHAN
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
@@ -140,18 +143,27 @@ class DashboardPage extends StatelessWidget {
 
       // ================= BOTTOM NAV =================
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
+        currentIndex: _currentIndex,
+        backgroundColor: hijauMuda,
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.black54,
-        backgroundColor: hijauMuda,
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
+          if (index == _currentIndex) return;
+
+          setState(() {
+            _currentIndex = index;
+          });
+
           if (index == 1) {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => const UserPage(),
-              ),
+              MaterialPageRoute(builder: (_) => const UserPage()),
+            );
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const TransaksiPage()),
             );
           }
         },
@@ -177,7 +189,6 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  // ================= CARD STAT =================
   Widget _statCard(IconData icon, String title, String value) {
     return Expanded(
       child: Container(
@@ -190,16 +201,10 @@ class DashboardPage extends StatelessWidget {
           children: [
             Icon(icon, color: Colors.black),
             const SizedBox(height: 8),
-            Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
             Text(
               value,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ],
         ),
