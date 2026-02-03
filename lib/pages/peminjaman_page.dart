@@ -13,189 +13,151 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
   final Color hijauMuda = const Color(0xFF8BAE66);
   final Color hijauTua = const Color(0xFF628141);
 
-  // ================= DATA =================
   List<Map<String, dynamic>> peminjamanList = [
     {
       'nama': 'Ammelia',
+      'kelas': 'XII RPL 3',
       'alat': 'Laptop',
+      'jumlah': '1',
       'tanggal': '2026-01-29',
+      'batas': '2026-02-02',
       'status': 'dikembalikan',
     },
     {
       'nama': 'Rifky',
+      'kelas': 'XII DKV 2',
       'alat': 'Keyboard',
+      'jumlah': '1',
       'tanggal': '2026-01-29',
+      'batas': '2026-02-01',
       'status': 'dipinjam',
     },
   ];
 
-  // ================= DELETE =================
-  void _hapusPeminjaman(int index) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Hapus Data'),
-        content: const Text('Yakin ingin menghapus data peminjaman ini?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Batal'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                peminjamanList.removeAt(index);
-              });
-              Navigator.pop(context);
-            },
-            child: const Text('Hapus'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ================= UI =================
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
-      // ================= APP BAR =================
       appBar: AppBar(
         backgroundColor: hijauMuda,
-        elevation: 0,
         title: const Text('Data Peminjaman'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: const BackButton(),
         actions: [
-          // ===== TAMBAH PEMINJAMAN =====
           IconButton(
             icon: const Icon(Icons.add),
-           onPressed: () async {
-             final result = await Navigator.push(
-            context,
-            MaterialPageRoute(
-          builder: (_) => const BuatPeminjamanPage(),
-           ),
-         );
-         if (result != null) {
-           setState(() => peminjamanList.add(result));
-           }
-          },
+            onPressed: () async {
+              final result = await Navigator.push<Map<String, dynamic>>(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const BuatPeminjamanPage(),
+                ),
+              );
+
+              if (result != null) {
+                setState(() => peminjamanList.add(result));
+              }
+            },
           ),
         ],
       ),
-
-      // ================= BODY =================
-      body: Padding(
+      body: ListView.builder(
         padding: const EdgeInsets.all(16),
-        child: ListView.builder(
-          itemCount: peminjamanList.length,
-          itemBuilder: (context, index) {
-            final data = peminjamanList[index];
-            final bool dikembalikan = data['status'] == 'dikembalikan';
+        itemCount: peminjamanList.length,
+        itemBuilder: (context, index) {
+          final data = peminjamanList[index];
+          final dikembalikan = data['status'] == 'dikembalikan';
 
-            return Container(
-              margin: const EdgeInsets.only(bottom: 16),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: hijauMuda,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // ===== HEADER =====
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: hijauTua,
-                        child: Text(
-                          data['nama'][0],
+          return Container(
+            margin: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: hijauMuda,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // HEADER
+                Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: hijauTua,
+                      child: Text(
+                        data['nama'][0],
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          data['nama'],
                           style: const TextStyle(
-                            color: Colors.white,
                             fontWeight: FontWeight.bold,
+                            fontSize: 16,
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            data['nama'],
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
+                        Text(data['alat']),
+                      ],
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 12),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Tanggal\n${data['tanggal']}'),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        const Text('Status'),
+                        Text(
+                          data['status'],
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color:
+                                dikembalikan ? Colors.green : Colors.red,
                           ),
-                          Text(data['alat']),
-                        ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 12),
+
+                Row(
+                  children: [
+                    // ===== DETAIL =====
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black,
                       ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  // ===== INFO =====
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Tanggal\n${data['tanggal']}'),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          const Text('Status'),
-                          Text(
-                            data['status'],
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color:
-                                  dikembalikan ? Colors.green : Colors.red,
-                            ),
+                      onPressed: () async {
+                        final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                DetailPeminjamanPage(data: data),
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        );
 
-                  const SizedBox(height: 12),
+                        if (result == null) return;
 
-                  // ===== BUTTON =====
-                  Row(
-                    children: [
-                      // ===== LIHAT DETAIL =====
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black,
-                        ),
-                       onPressed: () async {
-                      final result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => DetailPeminjamanPage(data: data),
-                        ),
-                      );
+                        if (result['action'] == 'delete') {
+                          setState(() => peminjamanList.removeAt(index));
+                        }
 
-                      if (result == 'DELETE') {
-                        setState(() => peminjamanList.removeAt(index));
-                      } else if (result != null) {
-                        setState(() => peminjamanList[index] = result);
-                      }
-                    },
-                        child: const Text('LIHAT DETAIL'),
-                      ),
-                      const Spacer(),
-
-                      // ===== EDIT =====
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                       onPressed: () async {
-                          final result = await Navigator.push(
+                        if (result['action'] == 'edit') {
+                          final edited =
+                              await Navigator.push<Map<String, dynamic>>(
                             context,
                             MaterialPageRoute(
                               builder: (_) => BuatPeminjamanPage(
@@ -205,24 +167,72 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                             ),
                           );
 
-                          if (result != null) {
-                            setState(() => peminjamanList[index] = result);
+                          if (edited != null) {
+                            setState(
+                                () => peminjamanList[index] = edited);
                           }
-                        },
-                      ),
+                        }
+                      },
+                      child: const Text('LIHAT DETAIL'),
+                    ),
+                    const Spacer(),
 
-                      // ===== DELETE =====
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () => _hapusPeminjaman(index),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
+                    // ===== EDIT =====
+                    IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () async {
+                        final edited =
+                            await Navigator.push<Map<String, dynamic>>(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => BuatPeminjamanPage(
+                              isEdit: true,
+                              data: data,
+                            ),
+                          ),
+                        );
+
+                        if (edited != null) {
+                          setState(() => peminjamanList[index] = edited);
+                        }
+                      },
+                    ),
+
+                    // ===== DELETE =====
+                    IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text('Hapus Data'),
+                            content: const Text(
+                                'Yakin ingin menghapus peminjaman ini?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(context),
+                                child: const Text('Batal'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  setState(() =>
+                                      peminjamanList.removeAt(index));
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Hapus'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

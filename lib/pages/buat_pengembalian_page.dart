@@ -1,67 +1,75 @@
 import 'package:flutter/material.dart';
 
-class BuatPeminjamanPage extends StatefulWidget {
-  final bool isEdit;
+class BuatPengembalianPage extends StatefulWidget {
   final Map<String, dynamic>? data;
 
-  const BuatPeminjamanPage({
-    super.key,
-    this.isEdit = false,
-    this.data,
-  });
+  const BuatPengembalianPage({super.key, this.data, required bool isEdit});
 
   @override
-  State<BuatPeminjamanPage> createState() => _BuatPeminjamanPageState();
+  State<BuatPengembalianPage> createState() => _BuatPengembalianPageState();
 }
 
-class _BuatPeminjamanPageState extends State<BuatPeminjamanPage> {
+class _BuatPengembalianPageState extends State<BuatPengembalianPage> {
   final Color hijauMuda = const Color(0xFF8BAE66);
 
   late TextEditingController namaCtrl;
-  late TextEditingController kelasCtrl;
   late TextEditingController alatCtrl;
-  late TextEditingController jumlahCtrl;
   late TextEditingController tanggalCtrl;
-  late TextEditingController batasCtrl;
+
+  String kondisi = 'Baik';
 
   @override
   void initState() {
     super.initState();
-
-    // PREFILL SAAT EDIT
     namaCtrl = TextEditingController(text: widget.data?['nama'] ?? '');
-    kelasCtrl = TextEditingController(text: widget.data?['kelas'] ?? '');
     alatCtrl = TextEditingController(text: widget.data?['alat'] ?? '');
-    jumlahCtrl = TextEditingController(text: widget.data?['jumlah'] ?? '');
-    tanggalCtrl =
-        TextEditingController(text: widget.data?['tanggal'] ?? '');
-    batasCtrl =
-        TextEditingController(text: widget.data?['batas'] ?? '');
+    tanggalCtrl = TextEditingController(text: widget.data?['tanggal'] ?? '');
+    kondisi = widget.data?['kondisi'] ?? 'Baik';
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+
       appBar: AppBar(
         backgroundColor: hijauMuda,
-        title:
-            Text(widget.isEdit ? 'Edit Peminjaman' : 'Buat Peminjaman'),
-        leading: const BackButton(),
+        title: Text(widget.data == null
+            ? 'Buat Pengembalian'
+            : 'Edit Pengembalian'),
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             _input('Nama Peminjam', namaCtrl),
-            _input('Kelas', kelasCtrl),
             _input('Nama Alat', alatCtrl),
-            _input('Jumlah Pinjam', jumlahCtrl,
-                keyboard: TextInputType.number),
-            _input('Tanggal Pinjam', tanggalCtrl),
-            _input('Batas Pengembalian', batasCtrl),
+            _input('Tanggal Pengembalian', tanggalCtrl),
 
-            const SizedBox(height: 20),
+            // ===== KONDISI BARANG =====
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE5ECD8),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: DropdownButtonFormField<String>(
+                value: kondisi,
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                ),
+                items: const [
+                  DropdownMenuItem(value: 'Baik', child: Text('Baik')),
+                  DropdownMenuItem(value: 'Rusak Ringan', child: Text('Rusak Ringan')),
+                  DropdownMenuItem(value: 'Rusak Berat', child: Text('Rusak Berat')),
+                  DropdownMenuItem(value: 'Hilang', child: Text('Hilang')),
+                ],
+                onChanged: (v) => setState(() => kondisi = v!),
+              ),
+            ),
+
+            const SizedBox(height: 24),
 
             SizedBox(
               width: double.infinity,
@@ -77,13 +85,9 @@ class _BuatPeminjamanPageState extends State<BuatPeminjamanPage> {
                 onPressed: () {
                   Navigator.pop(context, {
                     'nama': namaCtrl.text,
-                    'kelas': kelasCtrl.text,
                     'alat': alatCtrl.text,
-                    'jumlah': jumlahCtrl.text,
                     'tanggal': tanggalCtrl.text,
-                    'batas': batasCtrl.text,
-                    'status':
-                        widget.data?['status'] ?? 'dipinjam',
+                    'kondisi': kondisi,
                   });
                 },
                 child: const Text(
@@ -91,25 +95,20 @@ class _BuatPeminjamanPageState extends State<BuatPeminjamanPage> {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _input(
-    String label,
-    TextEditingController controller, {
-    TextInputType keyboard = TextInputType.text,
-  }) {
+  Widget _input(String hint, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: TextField(
         controller: controller,
-        keyboardType: keyboard,
         decoration: InputDecoration(
-          hintText: label,
+          hintText: hint,
           filled: true,
           fillColor: const Color(0xFFE5ECD8),
           border: OutlineInputBorder(
