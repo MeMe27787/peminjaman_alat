@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:peminjaman/pages/user_page.dart';
 import 'package:peminjaman/pages/transaksi_page.dart';
+import 'package:peminjaman/pages/riwayat_page.dart';
+
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -164,6 +166,11 @@ class _DashboardPageState extends State<DashboardPage> {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const TransaksiPage()),
+            );
+          } else if (index == 3) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const RiwayatPage()),
             );
           }
         },

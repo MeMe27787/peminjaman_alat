@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:peminjaman/pages/peminjaman_page.dart';
 import 'package:peminjaman/pages/pengembalian_page.dart';
+import 'package:peminjaman/pages/riwayat_page.dart';
 
 class TransaksiPage extends StatelessWidget {
   const TransaksiPage({super.key});
@@ -120,8 +121,17 @@ class TransaksiPage extends StatelessWidget {
         unselectedItemColor: Colors.black54,
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
-          if (index == 0 || index == 1) {
-            Navigator.pop(context);
+          if (index == 0) {
+            Navigator.pop(context); // kembali ke Beranda
+          } else if (index == 1) {
+            Navigator.pop(context); // kembali ke Admin
+          } else if (index == 2) {
+            // sedang di Transaksi → tidak perlu apa-apa
+          } else if (index == 3) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const RiwayatPage()),
+            );
           }
         },
         items: const [

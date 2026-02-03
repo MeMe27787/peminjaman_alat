@@ -4,6 +4,7 @@ import 'package:peminjaman/pages/kategori_page.dart';
 import 'package:peminjaman/pages/user_management_page.dart';
 import 'package:peminjaman/pages/dashboard_page.dart';
 import 'package:peminjaman/pages/transaksi_page.dart';
+import 'package:peminjaman/pages/riwayat_page.dart';
 
 class UserPage extends StatelessWidget {
   const UserPage({super.key});
@@ -125,20 +126,23 @@ class UserPage extends StatelessWidget {
         unselectedItemColor: Colors.black54,
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
-          if (index == 0) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const DashboardPage()),
-            );
+        if (index == 0) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const DashboardPage()),
+          );
           } else if (index == 1) {
-            // sedang di Admin
+            // sedang di Admin → tidak perlu apa-apa
           } else if (index == 2) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (_) => const TransaksiPage()),
             );
           } else if (index == 3) {
-            // nanti ke Riwayat
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const RiwayatPage()),
+            );
           }
         },
         items: const [
