@@ -72,21 +72,21 @@ class RiwayatPage extends StatelessWidget {
             const SizedBox(height: 16),
 
             _logCard(
-              title: 'Admin 8',
+              title: 'Admin Bengkel',
               subtitle: 'Melakukan verifikasi pengembalian alat ID',
               kode: '#12PK001',
               status: 'BARU SAJA',
             ),
             const SizedBox(height: 12),
             _logCard(
-              title: 'Admin 2',
+              title: 'Admin Bengkel',
               subtitle: 'Melakukan verifikasi pengembalian alat ID',
               kode: '#12PK001',
               status: 'BARU SAJA',
             ),
             const SizedBox(height: 12),
             _logCard(
-              title: 'Admin Bengkel 5',
+              title: 'Admin Bengkel',
               subtitle: 'Melakukan verifikasi pengembalian alat ID',
               kode: '#12PK001',
               status: 'BARU SAJA',

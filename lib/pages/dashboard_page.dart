@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:peminjaman/pages/user_page.dart';
+import 'package:peminjaman/pages/alat_page.dart';
+import 'package:peminjaman/pages/kategori_page.dart';
 import 'package:peminjaman/pages/transaksi_page.dart';
 import 'package:peminjaman/pages/riwayat_page.dart';
-
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -52,16 +53,13 @@ class _DashboardPageState extends State<DashboardPage> {
                         fontSize: 16,
                       ),
                     ),
-                    Text(
-                      'admin',
-                      style: TextStyle(fontSize: 12),
-                    ),
+                    Text('admin', style: TextStyle(fontSize: 12)),
                   ],
                 ),
                 const Spacer(),
-                Icon(Icons.notifications),
+                const Icon(Icons.notifications),
                 const SizedBox(width: 12),
-                Icon(Icons.logout),
+                const Icon(Icons.logout),
               ],
             ),
           ),
@@ -77,31 +75,74 @@ class _DashboardPageState extends State<DashboardPage> {
             children: [
               const Text(
                 'Beranda',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-
               const SizedBox(height: 16),
 
               Row(
                 children: [
-                  _statCard(Icons.person, 'USER', '12'),
+                  _statCard(
+                    icon: Icons.person,
+                    title: 'USER',
+                    value: '12',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const UserPage()),
+                      );
+                    },
+                  ),
                   const SizedBox(width: 12),
-                  _statCard(Icons.computer, 'ALAT', '29'),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  _statCard(Icons.receipt, 'TRANSAKSI', '75'),
-                  const SizedBox(width: 12),
-                  _statCard(Icons.category, 'KATEGORI', '14'),
+                  _statCard(
+                    icon: Icons.computer,
+                    title: 'ALAT',
+                    value: '29',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const AlatPage()),
+                      );
+                    },
+                  ),
                 ],
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 12),
+
+              Row(
+                children: [
+                  _statCard(
+                    icon: Icons.receipt_long,
+                    title: 'TRANSAKSI',
+                    value: '75',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const TransaksiPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(width: 12),
+                  _statCard(
+                    icon: Icons.category,
+                    title: 'KATEGORI',
+                    value: '14',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const KategoriPage(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+
+              // ======== INI YANG KAMU MINTA DITAMBAHKAN ========
+              const SizedBox(height: 24),
 
               Container(
                 padding: const EdgeInsets.all(16),
@@ -131,7 +172,14 @@ class _DashboardPageState extends State<DashboardPage> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const RiwayatPage(),
+                            ),
+                          );
+                        },
                         child: const Text('CEK LAPORAN'),
                       ),
                     ),
@@ -153,9 +201,7 @@ class _DashboardPageState extends State<DashboardPage> {
         onTap: (index) {
           if (index == _currentIndex) return;
 
-          setState(() {
-            _currentIndex = index;
-          });
+          setState(() => _currentIndex = index);
 
           if (index == 1) {
             Navigator.push(
@@ -168,52 +214,54 @@ class _DashboardPageState extends State<DashboardPage> {
               MaterialPageRoute(builder: (_) => const TransaksiPage()),
             );
           } else if (index == 3) {
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const RiwayatPage()),
             );
           }
         },
         items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
+          BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Admin'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Beranda',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.group),
-            label: 'Admin',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.receipt_long),
-            label: 'Transaksi',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            label: 'Riwayat',
-          ),
+              icon: Icon(Icons.receipt_long), label: 'Transaksi'),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Riwayat'),
         ],
       ),
     );
   }
 
-  Widget _statCard(IconData icon, String title, String value) {
+  // ================= STAT CARD =================
+  Widget _statCard({
+    required IconData icon,
+    required String title,
+    required String value,
+    required VoidCallback onTap,
+  }) {
     return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: hijauTua,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          children: [
-            Icon(icon, color: Colors.black),
-            const SizedBox(height: 8),
-            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-            Text(
-              value,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ],
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: hijauTua,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            children: [
+              Icon(icon, color: Colors.black),
+              const SizedBox(height: 8),
+              Text(title,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

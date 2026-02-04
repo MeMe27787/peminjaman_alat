@@ -1,231 +1,183 @@
 import 'package:flutter/material.dart';
 import '../models/user_model.dart';
+import '../services/user_service.dart';
 
-class UserDetailPage extends StatefulWidget {
+class UserDetailPage extends StatelessWidget {
   final UserModel user;
-
   const UserDetailPage({super.key, required this.user});
 
-  @override
-  State<UserDetailPage> createState() => _UserDetailPageState();
-}
-
-class _UserDetailPageState extends State<UserDetailPage> {
   final Color hijauMuda = const Color(0xFF8BAE66);
   final Color hijauTua = const Color(0xFF628141);
 
-  // ================= EDIT =================
-  void _editUser() {
-    final namaController = TextEditingController(text: widget.user.nama);
-    final kelasController = TextEditingController(text: widget.user.kelas);
-    String peran = widget.user.peran;
-    String status = widget.user.status;
+  // ================= LOGIKA HAPUS =================
+  void _deleteUser(BuildContext context) {
+    final UserService userService = UserService();
 
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Edit User'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: namaController,
-              decoration: const InputDecoration(labelText: 'Nama'),
-            ),
-            TextField(
-              controller: kelasController,
-              decoration: const InputDecoration(labelText: 'Kelas'),
-            ),
-            DropdownButtonFormField(
-              value: peran,
-              items: const [
-                DropdownMenuItem(value: 'Admin', child: Text('Admin')),
-                DropdownMenuItem(value: 'Petugas', child: Text('Petugas')),
-                DropdownMenuItem(value: 'Siswa', child: Text('Siswa')),
-              ],
-              onChanged: (v) => peran = v!,
-              decoration: const InputDecoration(labelText: 'Peran'),
-            ),
-            DropdownButtonFormField(
-              value: status,
-              items: const [
-                DropdownMenuItem(value: 'Aktif', child: Text('Aktif')),
-                DropdownMenuItem(
-                    value: 'Tidak Aktif', child: Text('Tidak Aktif')),
-              ],
-              onChanged: (v) => status = v!,
-              decoration: const InputDecoration(labelText: 'Status'),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Batal'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                widget.user.nama = namaController.text;
-                widget.user.kelas = kelasController.text;
-                widget.user.peran = peran;
-                widget.user.status = status;
-              });
-              Navigator.pop(context);
-            },
-            child: const Text('Simpan'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ================= DELETE =================
-  void _deleteUser() {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
+      builder: (context) => AlertDialog(
         title: const Text('Hapus User'),
-        content: Text('Yakin hapus ${widget.user.nama}?'),
+        content: Text('Apakah Anda yakin ingin menghapus ${user.nama}?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Batal'),
           ),
           ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () async {
+              try {
+                await userService.deleteUser(user.id);
+                if (context.mounted) {
+                  Navigator.pop(context); // Tutup Dialog
+                  Navigator.pop(context, true); // Kembali ke list dengan instruksi refresh
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Gagal menghapus: $e')),
+                  );
+                }
+              }
             },
-            child: const Text('Hapus'),
+            child: const Text('Hapus', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
     );
   }
 
-  // ================= UI =================
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: hijauMuda,
-        title: const Text('Detail User'),
+        elevation: 0,
+        title: const Text('Profil Pengguna'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: hijauMuda,
-            borderRadius: BorderRadius.circular(24),
-          ),
-          child: Column(
-            children: [
-              // ===== AVATAR =====
-              Container(
-                width: 90,
-                height: 90,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Text(
-                  widget.user.nama[0],
-                  style: const TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                  ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Header Profil
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 30),
+              decoration: BoxDecoration(
+                color: hijauMuda,
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(30),
                 ),
               ),
-
-              const SizedBox(height: 12),
-
-              Text(
-                widget.user.nama,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // ===== INFO KIRI =====
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _info('Kelas', widget.user.kelas),
-                    const SizedBox(height: 8),
-                    _info('Status Akun', widget.user.status),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // ===== PERAN =====
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-                decoration: BoxDecoration(
-                  color: hijauTua,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  widget.user.peran,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-
-              const Spacer(),
-
-              // ===== BUTTON =====
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: Column(
                 children: [
-                  ElevatedButton(
-                    onPressed: _editUser,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundColor: hijauTua,
+                    child: Text(
+                      user.nama.isNotEmpty ? user.nama[0].toUpperCase() : '?',
+                      style: const TextStyle(
+                        fontSize: 40,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    child: const Text('EDIT DATA'),
                   ),
-                  const SizedBox(width: 16),
-                  IconButton(
-                    onPressed: _deleteUser,
-                    icon: const Icon(Icons.delete),
+                  const SizedBox(height: 16),
+                  Text(
+                    user.nama,
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    user.peran,
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Informasi Detail',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  _infoTile(Icons.class_, 'Kelas', user.kelas),
+                  _infoTile(Icons.info_outline, 'Status Akun', user.status),
+                  _infoTile(Icons.badge, 'ID Pengguna', user.id.toString()),
+                  
+                  const SizedBox(height: 40),
+
+                  // Tombol Hapus
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton.icon(
+                      onPressed: () => _deleteUser(context),
+                      icon: const Icon(Icons.delete_forever),
+                      label: const Text('HAPUS PENGGUNA'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red.shade400,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _info(String label, String value) {
-    return Row(
-      children: [
-        SizedBox(
-          width: 110,
-          child: Text(
-            label,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+  Widget _infoTile(IconData icon, String label, String value) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade100,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: hijauTua),
+          const SizedBox(width: 16),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
-        ),
-        Text(': $value'),
-      ],
+        ],
+      ),
     );
   }
 }
